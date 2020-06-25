@@ -1,68 +1,59 @@
-# Homebridge Apple TV - Now Playing
+# Homebridge Mi Kettle
 
-A [homebridge](https://github.com/nfarina/homebridge) plugin that exposes Apple TV devices to Homekit, along with it's current Power State, Playback State and Now Playing Information.
+*NOTE: This is in development stages and should not be used!*
+
+A [homebridge](https://github.com/nfarina/homebridge) plugin that exposes your Xiaomi Smart Kettle to Homekit.
 
 ## Overview
 
-This plugin exposes the Apple TV as a switch device, with the switch power state representing the Apple TV power state. The playback state is exposed through the Active charceristic and all other now playing information get's exposed through customised characteristics.
+This plugin exposes the Xiaomi Smart Kettle as a switch device, with the switch power state representing the Kettle boile state. The current temperature is exposed through a linked Temperature Sensor.
 
-The media type is calculated by checking artist and album information. This characterist comes in handy if you would like to setup automations that dim light for only videos and not music.
-
-** Note: ** The now playing information are exposed as custom charactersitics, which means that the Apple Home App will not be able to read these. You will need to use an app such as [Home+ 4]:https://apps.apple.com/us/app/home-4/id995994352 or [Eve for Homekit]:https://apps.apple.com/us/app/eve-for-homekit/id917695792.
+** Note: ** This plugin is dependent on the amazing [Cybele project]:https://github.com/Hypfer/Cybele by [Hypfer]:https://github.com/Hypfer. Please follow the instructions provided by the project readme.
 
 ## Sample Configuration
 
 ```yaml
-{    
-  "platform": "AppleTvNowPlayingPlatform",
-  "debug": true, 
-  "devices": [        
-    {            
-      "name": "Lounge Apple TV",            
-      "credentials": "C8309D5A-4AAD-4338-8B45...."        
-    }    
-  ]
-}
+"accessories": [
+    {
+      "accessory": "MiKettle",
+      "debug": true,
+      "name": "My Smart Kettle",
+      "mac": "1a2b3c4d5e6f",
+      "mqtt": {
+        "url": "http://mqtthost:port"
+      }
+    }   
+]
 ```
 ### Configuration Definition
 
-* **platform**: The identifier for the platform (*AppleTvNowPlayingPlatform*).
+* **accessory**: The identifier for the accessory (*AppleTvNowPlayingPlatform*).
 * **debug** [*optional*]: Enables limited debugging.
-* **devices**: A list of devices you would like to register with the platform.     
-  * **name**: The name you would like to expose for the device.
-  * **credentials**: The credentials neede to authorise connection to the device.
+* **name**: The name you would like to expose for the device.
+* **mac**: The mac address of your kettle. You can follow the 
 
 ## Retrieving credentials
 
-In order to retrieve credentials for your Apple TV, please follow these step
+This guide assumes that you are using a Raspberry Pi. These should apply to any linux based device with bluetooth capabilities.
 
-1. Execute the cli application bundled with this package from the package directory
+In order to retrieve the MAC address for your Kettle, please follow these steps
+
+1. Place your Raspberry Pi near your kettle.
+1. Execute this command
 ```
-/path/to/homebridge-appletv-now-playing $ node .\bin\cli.js
+hciconfig hci0 down
 ```
-2. Choose the device with which you would like to pair.
-3. Enter the PIN shown on your device.
+2. You should see your kettle within the reuslt list
+```
+B8:**:5A:**:FB:** (unknown)
+*E2:7C:**:45:**:12 MiKettle*
+53:**:1A:**:39:** (unknown)
+2A:D6:**:9A:**:23 (unknown)
+```
 
-Example:
+If you get the error *Set scan parameters failed: Input/output error* try running
 
 ```
-/path/to/homebridge-appletv-now-playing $ node .\bin\cli.js
-
-Scanning for devices...
-These Apple TVs were found:
-
-        1 : Lounge [C8309D5A-XXXX-XXXX-XXXX-2F7F2E813680]
-
-Pair with Apple TV (enter index) : 1
-
-Attempting to connect to Lounge [C8309D5A-XXXX-XXXX-XXXX-2F7F2E813680]...
-Attempting to pair with Lounge [C8309D5A-XXXX-XXXX-XXXX-2F7F2E813680]...
-
-Enter PIN shown on Lounge [C8309D5A-XXXX-XXXX-XXXX-2F7F2E813680] : 1234
-
-Successfully paired with Lounge [C8309D5A-XXXX-XXXX-XXXX-2F7F2E813680].
-
-Please update your configuration with the following credentials for this device:
-
-C8309D5A-XXXX-XXXX-XXXX-2F7F2E813680:27y934hj523843kj2432423j4234kj23423kj4234j......
+hciconfig hci0 down
+hciconfig hci0 up
 ```

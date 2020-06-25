@@ -96,6 +96,6 @@ class Accessory {
 }
 
 Accessory.pluginName = "homebridge-mi-kettle";
-Accessory.accessoryName = "Xiaomi Smart Kettle";
+Accessory.accessoryName = "MiKettle";
 
 module.exports = Accessory;

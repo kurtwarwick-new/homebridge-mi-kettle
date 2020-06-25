@@ -1,0 +1,38 @@
+{
+    "pluginAlias": "MiKettle",
+    "pluginType": "accessory",
+    "singular": false,
+    "schema": {
+        "type": "object",
+        "properties": {
+            "name": {
+                "title": "Name",
+                "type": "string",
+                "required": true
+            },
+            "mac": {
+                "title": "MAC Address",
+                "type": "string",
+                "default": true,
+                "description": "The MAC Address of your Xiaomi Smart Kettle."
+            },
+            "mqtt": {
+                "type": "object",
+                "title": "MQTT Options",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "title": "URL",
+                        "description": "The MQTT broker URL."
+                    }
+                }
+            },
+            "debug": {
+                "title": "Debug",
+                "type": "boolean",
+                "default": false,
+                "description": "Enables limited debugging."
+            }
+        }
+    }
+}
