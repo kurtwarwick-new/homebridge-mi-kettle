@@ -1,0 +1,35 @@
+{
+  "name": "homebridge-mi-kettle",
+  "version": "0.2.0",
+  "description": "A homebridge plugin that exposes your Xiaomi Smart Kettle device(s) to Homekit.",
+  "license": "MIT",
+  "keywords": [
+    "homebridge-plugin",
+    "homebridge",
+    "homebridge-mi-kettle",
+    "mi-kettle"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kurtwarwick-new/homebridge-mi-kettle.git"
+  },
+  "dependencies": {
+    "mqtt": "^4.1.0"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.2.0"
+  },
+  "bugs": {
+    "url": "https://github.com/kurtwarwick-new/homebridge-mi-kettle/issues"
+  },
+  "homepage": "https://github.com/kurtwarwick-new/homebridge-mi-kettle#readme",
+  "main": "index.js",
+  "bin": {
+    "miKettle": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kurt Warwick"
+}
