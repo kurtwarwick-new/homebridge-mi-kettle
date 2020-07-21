@@ -8,7 +8,7 @@ This plugin exposes the Xiaomi Smart Kettle as a switch device, with the switch 
 
 ## Setup
 
-** Note: ** This plugin is dependent on the amazing [Cybele project]:https://github.com/Hypfer/Cybele by [Hypfer]:https://github.com/Hypfer. 
+**Note:** This plugin is dependent on the amazing [Cybele project]:https://github.com/Hypfer/Cybele by [Hypfer]:https://github.com/Hypfer. 
 
 Please follow the instructions provided by the project readme, or you can use the docker setup that I am using found in the *cybele-docker* folder.
 
