@@ -42,7 +42,7 @@ Configuration can be done using [Homebridge Config UI X](https://github.com/oznu
 * **mqtt**
   * **url**: The URL for the mqtt server that will be used.
 
-## Retrieving credentials
+## Retrieving the MAC for the Kettle
 
 This guide assumes that you are using a Raspberry Pi. These should apply to any linux based device with bluetooth capabilities.
 
