@@ -25,9 +25,6 @@
   },
   "homepage": "https://github.com/kurtwarwick-new/homebridge-mi-kettle#readme",
   "main": "index.js",
-  "bin": {
-    "miKettle": "./bin/cli.js"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
