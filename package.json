@@ -1,7 +1,7 @@
 {
   "name": "homebridge-mi-kettle",
-  "version": "0.0.24",
-  "description": "A homebridge plugin that exposes your Xiaomi Smart Kettle device(s) to Homekit.",
+  "version": "0.0.30",
+  "description": "A homebridge plugin that exposes your Xiaomi Smart Kettle device(s) to HomeKit.",
   "license": "MIT",
   "keywords": [
     "homebridge-plugin",
