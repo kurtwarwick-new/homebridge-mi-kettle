@@ -35,7 +35,7 @@ class Accessory {
     }
 
     buildTopic(topic) {
-        return `cybele/kettle/${this.config.mac.toLowerCase().replace(":", "")}/${topic}`;
+        return `cybele/kettle/${this.config.mac.toLowerCase().replace(/:/g, "")}/${topic}`;
     }
 
     getServices() {
