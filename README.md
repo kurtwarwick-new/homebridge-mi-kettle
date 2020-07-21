@@ -12,6 +12,12 @@ This plugin exposes the Xiaomi Smart Kettle as a switch device, with the switch 
 
 Please follow the instructions provided by the project readme, or you can use the docker setup that I am using found in the *cybele-docker* folder.
 
+## Configration
+
+Configuration can be done using [Homebridge Config UI X](https://github.com/oznu/homebridge-config-ui-x).
+
+![Configuration](screenshots/configuration.png)
+
 ## Sample Configuration
 
 ```yaml
@@ -20,16 +26,16 @@ Please follow the instructions provided by the project readme, or you can use th
       "accessory": "MiKettle",
       "debug": true,
       "name": "My Smart Kettle",
-      "mac": "1a2b3c4d5e6f",
+      "mac": "FF:FF:FF:FF:FF:FF",
       "mqtt": {
-        "url": "http://mqtthost:port"
+        "url": "mqtt://username:password@mqtthost:port"
       }
     }   
 ]
 ```
 ### Configuration Definition
 
-* **accessory**: The identifier for the accessory (*AppleTvNowPlayingPlatform*).
+* **accessory**: The identifier for the accessory (*MiKettle*).
 * **debug** [*optional*]: Enables limited debugging.
 * **name**: The name you would like to expose for the device.
 * **mac**: The mac address of your kettle. You can follow the 
