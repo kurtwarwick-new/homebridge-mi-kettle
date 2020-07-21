@@ -1,0 +1,24 @@
+FROM python:3.8-slim
+
+WORKDIR /app 
+
+RUN apt update
+
+RUN apt install nodejs npm -y
+RUN apt install python3-dev -y
+RUN apt install git -y
+RUN apt install autoconf libtool -y
+RUN apt install libavahi-compat-libdnssd-dev -y
+RUN apt install build-essential -y
+RUN apt install usbutils -y
+RUN apt install bluez -y
+
+RUN git init
+RUN git remote add origin https://github.com/Hypfer/Cybele.git
+RUN git pull origin master
+
+RUN npm install
+
+COPY ./mi-kettle/code/app.js .
+
+VOLUME /config

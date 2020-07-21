@@ -1,0 +1,20 @@
+{
+  "mqtt": {
+      "url": "mqtt://username:password@192.168.0.1:1883"
+  },
+  "dongles": [
+      {
+          "hciDevice": "hci0",
+          "mode": "le",
+          "services": [],
+          "devices": [
+              {
+                  "type": "MiKettleDevice",
+                  "friendlyName": "Kitchen Kettle",
+                  "mac": "FF:FF:FF:FF:FF:FF",
+                  "productId": 275
+              }
+          ]
+      }
+  ]
+}
