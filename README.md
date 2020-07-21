@@ -49,7 +49,7 @@ In order to retrieve the MAC address for your Kettle, please follow these steps
 1. Place your Raspberry Pi near your kettle.
 1. Execute this command
 ```
-hciconfig hci0 down
+sudo hcitool lescan
 ```
 2. You should see your kettle within the reuslt list
 ```
@@ -62,6 +62,6 @@ B8:**:5A:**:FB:** (unknown)
 If you get the error *Set scan parameters failed: Input/output error* try running
 
 ```
-hciconfig hci0 down
-hciconfig hci0 up
+sudo hciconfig hci0 down
+sudo hciconfig hci0 up
 ```
