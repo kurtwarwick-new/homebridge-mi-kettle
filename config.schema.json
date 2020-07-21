@@ -13,8 +13,8 @@
             "mac": {
                 "title": "MAC Address",
                 "type": "string",
-                "default": true,
-                "description": "The MAC Address of your Xiaomi Smart Kettle."
+                "description": "The MAC Address of your Xiaomi Smart Kettle.",
+                "required": true
             },
             "mqtt": {
                 "type": "object",
@@ -23,7 +23,8 @@
                     "url": {
                         "type": "string",
                         "title": "URL",
-                        "description": "The MQTT broker URL."
+                        "description": "The MQTT broker URL.",
+                        "required": true
                     }
                 }
             },
