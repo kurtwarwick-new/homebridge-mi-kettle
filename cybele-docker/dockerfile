@@ -19,6 +19,4 @@ RUN git pull origin master
 
 RUN npm install
 
-COPY ./mi-kettle/code/app.js .
-
 VOLUME /config

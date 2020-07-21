@@ -1,0 +1,29 @@
+version: "3.4"
+
+services:
+
+    cybele:
+        restart: always
+        build:
+            context: .
+            dockerfile: ./dockerfile
+        container_name: cybele
+        network_mode: host
+        devices:
+            - /dev/tty
+            - /dev/ttyUSB0
+            - /dev/ttyUSB1
+            - /dev/ttyACM0
+        privileged: true
+        environment:
+            - TZ=Africa/Johannesburg
+        command: >
+            bash -c "cp /config/config.json . && 
+                service bluetooth start && 
+                hciconfig hci0 up &&
+                hciconfig hci0 sspmode 1 &&
+                hciconfig -a &&
+                node /app/app.js"
+        volumes:
+            - ./config:/config
+            - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
