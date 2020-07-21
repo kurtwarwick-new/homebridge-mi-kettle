@@ -39,6 +39,8 @@ Configuration can be done using [Homebridge Config UI X](https://github.com/oznu
 * **debug** [*optional*]: Enables limited debugging.
 * **name**: The name you would like to expose for the device.
 * **mac**: The mac address of your kettle. You can follow the 
+* **mqtt**
+  * **url**: The URL for the mqtt server that will be used.
 
 ## Retrieving credentials
 
