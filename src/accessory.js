@@ -18,6 +18,8 @@ class Accessory {
         this.logger = logger;
         this.api = api;
 
+        this.maxTemperature = this.config.maxTemperature || 90;
+
         Service = api.hap.Service;
         Characteristic = api.hap.Characteristic;
 
@@ -45,8 +47,10 @@ class Accessory {
     configureAccessory() {
         this.switchService = new Service.Switch(`${this.config.name} Switch`);
         this.temperatureService = new Service.TemperatureSensor(`${this.config.name} Temperature`);
+        this.contactService = new Service.ContactSensor(`${this.config.name} Contact`);
 
         this.switchService.addLinkedService(this.temperatureService);
+        this.switchService.addLinkedService(this.contactService);
 
         this.log(`[${this.config.mac}] initializing.`);
         this.log(`[${this.config.mac}] connecting to MQTT broker.`);
@@ -90,14 +94,14 @@ class Accessory {
             this.buildTopic("set_keep_warm_parameters"),
             JSON.stringify({
                 mode: value ? "boil" : "heat",
-                temperature: value ? 90 : 40,
+                temperature: value ? this.maxTemperature : 40,
             })
         );
 
         this.debug(
             `[${this.config.mac}] published set_keep_warm_parameters : \r\n${JSON.stringify({
                 mode: value ? "boil" : "heat",
-                temperature: value ? 90 : 40,
+                temperature: value ? this.maxTemperature : 40,
             })}`
         );
 
@@ -138,6 +142,7 @@ class Accessory {
         message = JSON.parse(message);
 
         this.temperatureService.setCharacteristic(Characteristic.CurrentTemperature, message);
+        this.temperature = parseInt(message);
     }
 
     onAttributes(message) {
@@ -151,6 +156,12 @@ class Accessory {
 
         if (!value) {
             this.setOnCharacteristic(false);
+
+            if (this.temperature && !isNaN(this.temperature) && this.temperature > this.maxTemperature) {
+                this.contactService.setCharacteristic(Characteristic.ContactSensorState, 1);
+
+                setTimeout(this.contactService.setCharacteristic(Characteristic.ContactSensorState, 0), 5000);
+            }
         }
 
         this.switchService.setCharacteristic(Characteristic.On, value);
