@@ -41,7 +41,7 @@ class Accessory {
     }
 
     getServices() {
-        return [this.switchService, this.temperatureService];
+        return [this.switchService, this.temperatureService, this.contactService];
     }
 
     configureAccessory() {
