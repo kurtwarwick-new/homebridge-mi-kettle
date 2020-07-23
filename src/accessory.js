@@ -19,6 +19,7 @@ class Accessory {
         this.api = api;
 
         this.maxTemperature = this.config.maxTemperature || 90;
+        this.power = false;
 
         Service = api.hap.Service;
         Characteristic = api.hap.Characteristic;
@@ -157,14 +158,18 @@ class Accessory {
         if (!value) {
             this.setOnCharacteristic(false);
 
-            if (this.temperature && !isNaN(this.temperature) && this.temperature > this.maxTemperature) {
-                this.motionSensor.setCharacteristic(Characteristic.MotionDetected, 1);
+            if (this.power) {
+                if (this.temperature && !isNaN(this.temperature) && this.temperature > this.maxTemperature) {
+                    this.motionSensor.setCharacteristic(Characteristic.MotionDetected, 1);
 
-                setTimeout(() => this.motionSensor.setCharacteristic(Characteristic.MotionDetected, 0), 5000);
+                    setTimeout(() => this.motionSensor.setCharacteristic(Characteristic.MotionDetected, 0), 5000);
+                }
             }
         }
 
         this.switchService.setCharacteristic(Characteristic.On, value);
+
+        this.power = value;
     }
 }
 
