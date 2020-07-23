@@ -41,16 +41,16 @@ class Accessory {
     }
 
     getServices() {
-        return [this.switchService, this.temperatureService, this.contactService];
+        return [this.switchService, this.temperatureService, this.motionSensor];
     }
 
     configureAccessory() {
         this.switchService = new Service.Switch(`${this.config.name} Switch`);
         this.temperatureService = new Service.TemperatureSensor(`${this.config.name} Temperature`);
-        this.contactService = new Service.ContactSensor(`${this.config.name} Contact`);
+        this.motionSensor = new Service.MotionSensor(`${this.config.name} Motion`);
 
         this.switchService.addLinkedService(this.temperatureService);
-        this.switchService.addLinkedService(this.contactService);
+        this.switchService.addLinkedService(this.motionSensor);
 
         this.log(`[${this.config.mac}] initializing.`);
         this.log(`[${this.config.mac}] connecting to MQTT broker.`);
@@ -158,9 +158,9 @@ class Accessory {
             this.setOnCharacteristic(false);
 
             if (this.temperature && !isNaN(this.temperature) && this.temperature > this.maxTemperature) {
-                this.contactService.setCharacteristic(Characteristic.ContactSensorState, 1);
+                this.motionSensor.setCharacteristic(Characteristic.MotionDetected, 1);
 
-                setTimeout(this.contactService.setCharacteristic(Characteristic.ContactSensorState, 0), 5000);
+                setTimeout(() => this.motionSensor.setCharacteristic(Characteristic.MotionDetected, 0), 5000);
             }
         }
 
