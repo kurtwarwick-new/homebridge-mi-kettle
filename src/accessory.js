@@ -12,18 +12,8 @@ class Accessory {
         this.onState = this.onState.bind(this);
         this.onAttributes = this.onAttributes.bind(this);
         this.getServices = this.getServices.bind(this);
-
-        this.setCoolingThresholdTemperature = this.setCoolingThresholdTemperature.bind(this);
-        
-        this.setHeatingThresholdTemperature = this.setHeatingThresholdTemperature.bind(this);
-        
-        this.getTargetHeatingCoolingState = this.getTargetHeatingCoolingState.bind(this);
         this.setTargetHeatingCoolingState = this.setTargetHeatingCoolingState.bind(this);
-        
-        this.getTargetTemperature = this.getTargetTemperature.bind(this);
         this.setTargetTemperature = this.setTargetTemperature.bind(this);
-        
-        this.getTemperatureDisplayUnits = this.getTemperatureDisplayUnits.bind(this);
         this.setTemperatureDisplayUnits = this.setTemperatureDisplayUnits.bind(this);
 
         this.config = config;
