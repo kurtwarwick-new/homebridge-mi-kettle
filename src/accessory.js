@@ -94,12 +94,16 @@ class Accessory {
         });
     }
 
-    setTargetHeatingCoolingStateCharacteristic(value, next) {
+    setTargetHeatingCoolingStateCharacteristic = (value, next) => {
         this.debug(`[${this.config.mac}] setting state to ${value}`);
+
+        next && next();
     }
 
-    setTargetTemperature(value, next) {
+    setTargetTemperature = (value, next) => {
         this.debug(`[${this.config.mac}] setting target temperature to ${value}`);
+
+        next && next();
     }
 
     setOnCharacteristic(value, next) {
