@@ -42,7 +42,8 @@ class Accessory {
     }
 
     getServices() {
-        return [this.switchService, this.temperatureService, this.motionSensor];
+        //return [this.switchService, this.temperatureService, this.motionSensor];
+        return [this.service];
     }
 
     configureAccessory() {
