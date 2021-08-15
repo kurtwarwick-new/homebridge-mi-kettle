@@ -9,10 +9,22 @@ class Accessory {
         this.debug = this.debug.bind(this);
         this.log = this.log.bind(this);
         this.buildTopic = this.buildTopic.bind(this);
-        this.setOnCharacteristic = this.setOnCharacteristic.bind(this);
         this.onState = this.onState.bind(this);
         this.onAttributes = this.onAttributes.bind(this);
         this.getServices = this.getServices.bind(this);
+
+        this.setCoolingThresholdTemperature = this.setCoolingThresholdTemperature.bind(this);
+        
+        this.setHeatingThresholdTemperature = this.setHeatingThresholdTemperature.bind(this);
+        
+        this.getTargetHeatingCoolingState = this.getTargetHeatingCoolingState.bind(this);
+        this.setTargetHeatingCoolingState = this.setTargetHeatingCoolingState.bind(this);
+        
+        this.getTargetTemperature = this.getTargetTemperature.bind(this);
+        this.setTargetTemperature = this.setTargetTemperature.bind(this);
+        
+        this.getTemperatureDisplayUnits = this.getTemperatureDisplayUnits.bind(this);
+        this.setTemperatureDisplayUnits = this.setTemperatureDisplayUnits.bind(this);
 
         this.config = config;
         this.logger = logger;
@@ -77,25 +89,24 @@ class Accessory {
 
                 let targetHeatingCoolingStateCHaracteristic = this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState);
 
-                targetHeatingCoolingStateCHaracteristic.on("set", this.setTargetHeatingCoolingState);
+                targetHeatingCoolingStateCHaracteristic.onSet(this.setTargetHeatingCoolingState);
                 targetHeatingCoolingStateCHaracteristic.props.validValues = [0, 1];
 
                 let targetTemperatureCharacteristic = this.service.getCharacteristic(Characteristic.TargetTemperature);
                     
-                targetTemperatureCharacteristic.on("set", this.setTargetTemperature);
-                targetTemperatureCharacteristic.on("get", this.getTargetTemperature);
+                targetTemperatureCharacteristic.onSet(this.setTargetTemperature);
                 targetTemperatureCharacteristic.props.minValue = 40;
                 targetTemperatureCharacteristic.props.maxValue = 100;
 
                 let coolingThresholdTemperatureCharacter = this.service.getCharacteristic(Characteristic.CoolingThresholdTemperature);
 
-                coolingThresholdTemperatureCharacter.on("set", this.setCoolingThresholdTemperature);
+                coolingThresholdTemperatureCharacter.onSet(this.setCoolingThresholdTemperature);
                 coolingThresholdTemperatureCharacter.props.minValue = 40;
                 coolingThresholdTemperatureCharacter.props.maxValue = 100;
 
                 let heatingThresholdTemperatureCharacteristic = this.service.getCharacteristic(Characteristic.HeatingThresholdTemperature);
 
-                heatingThresholdTemperatureCharacteristic.on("set", this.setHeatingThresholdTemperature);
+                heatingThresholdTemperatureCharacteristic.onSet(this.setHeatingThresholdTemperature);
                 heatingThresholdTemperatureCharacteristic.props.minValue = 40;
                 heatingThresholdTemperatureCharacteristic.props.maxValue = 100;
 
@@ -140,16 +151,10 @@ class Accessory {
         next && next();
     }
 
-    setCoolingThresholdTemperature = (value, next) => {
-        this.debug(`[${this.config.mac}] setting cooling threshold temperature to ${value}`);
+    getTemperatureDisplayUnits = () => {
+        this.debug(`[${this.config.mac}] getting temperature display units`);
 
-        next && next();
-    }
-
-    setHeatingThresholdTemperature = (value, next) => {
-        this.debug(`[${this.config.mac}] setting heating threshold temperature to ${value}`);
-
-        next && next();
+        return Characteristic.TemperatureDisplayUnits.CELSIUS;
     }
 
     setOnCharacteristic(value, next) {
@@ -199,25 +204,22 @@ class Accessory {
         next && next();
     }
 
-    onState(message) {
+    onState = (message) => {
         message = message.toString("utf-8");
 
         this.debug(`[${this.config.mac}] received state : ${message}`);
 
         this.service.setCharacteristic(Characteristic.CurrentTemperature, message);
-
-        // message = JSON.parse(message);
-
-        // this.temperatureService.setCharacteristic(Characteristic.CurrentTemperature, message);
-        // this.temperature = parseInt(message);
     }
 
-    onAttributes(message) {
+    onAttributes = (message) => {
         message = message.toString("utf-8");
 
         this.debug(`[${this.config.mac}] received attributes : \r\n${message}`);
 
-        // message = JSON.parse(message);
+        message = JSON.parse(message);
+
+        this.switchService.setCharacteristic(Characteristic.CurrentHeatingCoolingState, value === "heating" ? 1 : 0);
 
         // let value = message.action === "heating";
 
