@@ -46,12 +46,14 @@ class Accessory {
     }
 
     configureAccessory() {
-        this.switchService = new Service.Switch(`${this.config.name} Switch`);
-        this.temperatureService = new Service.TemperatureSensor(`${this.config.name} Temperature`);
-        this.motionSensor = new Service.MotionSensor(`${this.config.name} Motion`);
+        // this.switchService = new Service.Switch(`${this.config.name} Switch`);
+        // this.temperatureService = new Service.TemperatureSensor(`${this.config.name} Temperature`);
+        // this.motionSensor = new Service.MotionSensor(`${this.config.name} Motion`);
 
-        this.switchService.addLinkedService(this.temperatureService);
-        this.switchService.addLinkedService(this.motionSensor);
+        this.service = new Service.Thermostat(`${this.config.name}`);
+
+        // this.switchService.addLinkedService(this.temperatureService);
+        // this.switchService.addLinkedService(this.motionSensor);
 
         this.log(`[${this.config.mac}] initializing.`);
         this.log(`[${this.config.mac}] connecting to MQTT broker.`);
@@ -81,56 +83,67 @@ class Accessory {
 
                 this.log(`[${this.config.mac}] accessory ready.`);
 
-                this.switchService.getCharacteristic(Characteristic.On).on("set", this.setOnCharacteristic);
+                //this.switchService.getCharacteristic(Characteristic.On).on("set", this.setOnCharacteristic);
+                
+                this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).on("set", this.setTargetHeatingCoolingStateCharacteristic);
+                this.service.getCharacteristic(Characteristic.TargetTemperature).on("set", this.setTargetTemperature);
             } catch (error) {
                 this.log(`[${this.config.mac}] accessory failed to initialize. \r\n${error}`);
             }
         });
     }
 
+    setTargetHeatingCoolingStateCharacteristic(value, next) {
+        this.debug(`[${this.config.mac}] setting state to ${value}`);
+    }
+
+    setTargetTemperature(value, next) {
+        this.debug(`[${this.config.mac}] setting target temperature to ${value}`);
+    }
+
     setOnCharacteristic(value, next) {
         this.debug(`[${this.config.mac}] turning ${value ? "on" : "off"}`);
 
-        this.mqtt.publish(
-            this.buildTopic("set_keep_warm_parameters"),
-            JSON.stringify({
-                mode: value ? "boil" : "heat",
-                temperature: value ? this.maxTemperature : 40,
-            })
-        );
+        // this.mqtt.publish(
+        //     this.buildTopic("set_keep_warm_parameters"),
+        //     JSON.stringify({
+        //         mode: value ? "boil" : "heat",
+        //         temperature: value ? this.maxTemperature : 40,
+        //     })
+        // );
 
-        this.debug(
-            `[${this.config.mac}] published set_keep_warm_parameters : \r\n${JSON.stringify({
-                mode: value ? "boil" : "heat",
-                temperature: value ? this.maxTemperature : 40,
-            })}`
-        );
+        // this.debug(
+        //     `[${this.config.mac}] published set_keep_warm_parameters : \r\n${JSON.stringify({
+        //         mode: value ? "boil" : "heat",
+        //         temperature: value ? this.maxTemperature : 40,
+        //     })}`
+        // );
 
-        this.mqtt.publish(
-            this.buildTopic("set_keep_warm_time_limit"),
-            JSON.stringify({
-                time: value ? 2 : 8,
-            })
-        );
+        // this.mqtt.publish(
+        //     this.buildTopic("set_keep_warm_time_limit"),
+        //     JSON.stringify({
+        //         time: value ? 2 : 8,
+        //     })
+        // );
 
-        this.debug(
-            `[${this.config.mac}] ppublished set_keep_warm_time_limit : \r\n${JSON.stringify({
-                time: value ? 2 : 8,
-            })}`
-        );
+        // this.debug(
+        //     `[${this.config.mac}] ppublished set_keep_warm_time_limit : \r\n${JSON.stringify({
+        //         time: value ? 2 : 8,
+        //     })}`
+        // );
 
-        this.mqtt.publish(
-            this.buildTopic("set_keep_warm_refill_mode"),
-            JSON.stringify({
-                mode: "keep_warm",
-            })
-        );
+        // this.mqtt.publish(
+        //     this.buildTopic("set_keep_warm_refill_mode"),
+        //     JSON.stringify({
+        //         mode: "keep_warm",
+        //     })
+        // );
 
-        this.debug(
-            `[${this.config.mac}] published set_keep_warm_refill_mode : \r\n${JSON.stringify({
-                mode: "keep_warm",
-            })}`
-        );
+        // this.debug(
+        //     `[${this.config.mac}] published set_keep_warm_refill_mode : \r\n${JSON.stringify({
+        //         mode: "keep_warm",
+        //     })}`
+        // );
 
         next && next();
     }
@@ -140,10 +153,12 @@ class Accessory {
 
         this.debug(`[${this.config.mac}] received state : ${message}`);
 
-        message = JSON.parse(message);
+        this.service.setCharacteristic(Characteristic.CurrentTemperature, message);
 
-        this.temperatureService.setCharacteristic(Characteristic.CurrentTemperature, message);
-        this.temperature = parseInt(message);
+        // message = JSON.parse(message);
+
+        // this.temperatureService.setCharacteristic(Characteristic.CurrentTemperature, message);
+        // this.temperature = parseInt(message);
     }
 
     onAttributes(message) {
@@ -151,25 +166,25 @@ class Accessory {
 
         this.debug(`[${this.config.mac}] received attributes : \r\n${message}`);
 
-        message = JSON.parse(message);
+        // message = JSON.parse(message);
 
-        let value = message.action === "heating";
+        // let value = message.action === "heating";
 
-        if (!value) {
-            this.setOnCharacteristic(false);
+        // if (!value) {
+        //     this.setOnCharacteristic(false);
 
-            if (this.power) {
-                if (this.temperature && !isNaN(this.temperature) && this.temperature > this.maxTemperature) {
-                    this.motionSensor.setCharacteristic(Characteristic.MotionDetected, 1);
+        //     if (this.power) {
+        //         if (this.temperature && !isNaN(this.temperature) && this.temperature > this.maxTemperature) {
+        //             this.motionSensor.setCharacteristic(Characteristic.MotionDetected, 1);
 
-                    setTimeout(() => this.motionSensor.setCharacteristic(Characteristic.MotionDetected, 0), 5000);
-                }
-            }
-        }
+        //             setTimeout(() => this.motionSensor.setCharacteristic(Characteristic.MotionDetected, 0), 5000);
+        //         }
+        //     }
+        // }
 
-        this.switchService.setCharacteristic(Characteristic.On, value);
+        // this.switchService.setCharacteristic(Characteristic.On, value);
 
-        this.power = value;
+        // this.power = value;
     }
 }
 
