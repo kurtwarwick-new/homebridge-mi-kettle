@@ -18,7 +18,6 @@ class Accessory {
         this.logger = logger;
         this.api = api;
 
-        this.maxTemperature = this.config.maxTemperature || 90;
         this.power = false;
 
         Service = api.hap.Service;
@@ -27,34 +26,26 @@ class Accessory {
         this.configureAccessory();
     }
 
-    debug(message) {
+    debug = (message) => {
         if (this.config && this.config.debug) {
             this.logger(message.toLowerCase());
         }
     }
 
-    log(message) {
+    log = (message) => {
         this.logger(message.toLowerCase());
     }
 
-    buildTopic(topic) {
+    buildTopic = (topic) => {
         return `cybele/kettle/${this.config.mac.toLowerCase().replace(/:/g, "")}/${topic}`;
     }
 
-    getServices() {
-        //return [this.switchService, this.temperatureService, this.motionSensor];
+    getServices = () => {
         return [this.service];
     }
 
-    configureAccessory() {
-        // this.switchService = new Service.Switch(`${this.config.name} Switch`);
-        // this.temperatureService = new Service.TemperatureSensor(`${this.config.name} Temperature`);
-        // this.motionSensor = new Service.MotionSensor(`${this.config.name} Motion`);
-
+    configureAccessory = () => {
         this.service = new Service.Thermostat(`${this.config.name}`);
-
-        // this.switchService.addLinkedService(this.temperatureService);
-        // this.switchService.addLinkedService(this.motionSensor);
 
         this.log(`[${this.config.mac}] initializing.`);
         this.log(`[${this.config.mac}] connecting to MQTT broker.`);
@@ -84,10 +75,26 @@ class Accessory {
 
                 this.log(`[${this.config.mac}] accessory ready.`);
 
-                //this.switchService.getCharacteristic(Characteristic.On).on("set", this.setOnCharacteristic);
-                
-                this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).on("set", this.setTargetHeatingCoolingStateCharacteristic);
-                this.service.getCharacteristic(Characteristic.TargetTemperature).on("set", this.setTargetTemperature);
+                this.service
+                    .getCharacteristic(Characteristic.TargetHeatingCoolingState)
+                    .on("set", this.setTargetHeatingCoolingStateCharacteristic);
+
+                this.service
+                    .getCharacteristic(Characteristic.TargetTemperature)
+                    .on("set", this.setTargetTemperature);
+
+                this.service
+                    .getCharacteristic(Characteristic.TemperatureDisplayUnits)
+                    .on("set", this.setTemperatureDisplayUnits);
+
+                this.service
+                    .getCharacteristic(Characteristic.CoolingThresholdTemperature)
+                    .on("set", this.setCoolingThresholdTemperature);
+
+                this.service
+                    .getCharacteristic(Characteristic.HeatingThresholdTemperature)
+                    .on("set", this.setHeatingThresholdTemperature);
+
             } catch (error) {
                 this.log(`[${this.config.mac}] accessory failed to initialize. \r\n${error}`);
             }
@@ -102,6 +109,24 @@ class Accessory {
 
     setTargetTemperature = (value, next) => {
         this.debug(`[${this.config.mac}] setting target temperature to ${value}`);
+
+        next && next();
+    }
+
+    setTemperatureDisplayUnits = (value, next) => {
+        this.debug(`[${this.config.mac}] setting temperature display units to ${value}`);
+
+        next && next();
+    }
+
+    setCoolingThresholdTemperature = (value, next) => {
+        this.debug(`[${this.config.mac}] setting cooling threshold temperature to ${value}`);
+
+        next && next();
+    }
+
+    setHeatingThresholdTemperature = (value, next) => {
+        this.debug(`[${this.config.mac}] setting heating threshold temperature to ${value}`);
 
         next && next();
     }
