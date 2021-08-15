@@ -94,11 +94,15 @@ class Accessory {
                 coolingThresholdTemperatureCharacter.props.minValue = 40;
                 coolingThresholdTemperatureCharacter.props.maxValue = 100;
 
+                this.service.setCharacteristic(Characteristic.CoolingThresholdTemperature, 40);
+
                 let heatingThresholdTemperatureCharacteristic = this.service.getCharacteristic(Characteristic.HeatingThresholdTemperature);
 
                 heatingThresholdTemperatureCharacteristic.onSet(this.setHeatingThresholdTemperature);
                 heatingThresholdTemperatureCharacteristic.props.minValue = 40;
                 heatingThresholdTemperatureCharacteristic.props.maxValue = 100;
+
+                this.service.setCharacteristic(Characteristic.HeatingThresholdTemperature, 100);
 
                 this.service
                     .getCharacteristic(Characteristic.TemperatureDisplayUnits)
@@ -128,6 +132,8 @@ class Accessory {
         this.debug(`[${this.config.mac}] setting target temperature to ${value}`);
 
         this.maxTemperature = value;
+
+        this.service.setCharacteristic(Characteristic.HeatingThresholdTemperature, value);
 
         next && next();
     }
