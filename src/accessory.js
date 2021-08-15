@@ -209,7 +209,7 @@ class Accessory {
 
         message = JSON.parse(message);
 
-        this.service.setCharacteristic(Characteristic.CurrentHeatingCoolingState, value === "heating" ? 1 : 0);
+        this.service.setCharacteristic(Characteristic.CurrentHeatingCoolingState, message.action === "heating" ? 1 : 0);
 
         // let value = message.action === "heating";
 
