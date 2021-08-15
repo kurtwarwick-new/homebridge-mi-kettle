@@ -20,7 +20,7 @@ class Accessory {
         this.logger = logger;
         this.api = api;
 
-        this.power = false;
+        this.maxTemperature = 100;
 
         Service = api.hap.Service;
         Characteristic = api.hap.Characteristic;
@@ -124,72 +124,16 @@ class Accessory {
         next && next();
     }
 
-    getTargetTemperature = (value) => {
-        this.debug(`[${this.config.mac}] getting target temperature`);
-        this.logger(value);
-    }
-
     setTargetTemperature = (value, next) => {
         this.debug(`[${this.config.mac}] setting target temperature to ${value}`);
+
+        this.maxTemperature = value;
 
         next && next();
     }
 
     setTemperatureDisplayUnits = (value, next) => {
         this.debug(`[${this.config.mac}] setting temperature display units to ${value}`);
-
-        next && next();
-    }
-
-    getTemperatureDisplayUnits = () => {
-        this.debug(`[${this.config.mac}] getting temperature display units`);
-
-        return Characteristic.TemperatureDisplayUnits.CELSIUS;
-    }
-
-    setOnCharacteristic(value, next) {
-        this.debug(`[${this.config.mac}] turning ${value ? "on" : "off"}`);
-
-        // this.mqtt.publish(
-        //     this.buildTopic("set_keep_warm_parameters"),
-        //     JSON.stringify({
-        //         mode: value ? "boil" : "heat",
-        //         temperature: value ? this.maxTemperature : 40,
-        //     })
-        // );
-
-        // this.debug(
-        //     `[${this.config.mac}] published set_keep_warm_parameters : \r\n${JSON.stringify({
-        //         mode: value ? "boil" : "heat",
-        //         temperature: value ? this.maxTemperature : 40,
-        //     })}`
-        // );
-
-        // this.mqtt.publish(
-        //     this.buildTopic("set_keep_warm_time_limit"),
-        //     JSON.stringify({
-        //         time: value ? 2 : 8,
-        //     })
-        // );
-
-        // this.debug(
-        //     `[${this.config.mac}] ppublished set_keep_warm_time_limit : \r\n${JSON.stringify({
-        //         time: value ? 2 : 8,
-        //     })}`
-        // );
-
-        // this.mqtt.publish(
-        //     this.buildTopic("set_keep_warm_refill_mode"),
-        //     JSON.stringify({
-        //         mode: "keep_warm",
-        //     })
-        // );
-
-        // this.debug(
-        //     `[${this.config.mac}] published set_keep_warm_refill_mode : \r\n${JSON.stringify({
-        //         mode: "keep_warm",
-        //     })}`
-        // );
 
         next && next();
     }
