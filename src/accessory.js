@@ -125,7 +125,7 @@ class Accessory {
 
     getTargetTemperature = (value) => {
         this.debug(`[${this.config.mac}] getting target temperature`);
-        this.debug(value);
+        this.debug(JSON.stringify(value));
     }
 
     setTargetTemperature = (value, next) => {
