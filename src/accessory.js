@@ -75,25 +75,33 @@ class Accessory {
 
                 this.log(`[${this.config.mac}] accessory ready.`);
 
-                this.service
-                    .getCharacteristic(Characteristic.TargetHeatingCoolingState)
-                    .on("set", this.setTargetHeatingCoolingStateCharacteristic);
+                let targetHeatingCoolingStateCHaracteristic = this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState);
 
-                this.service
-                    .getCharacteristic(Characteristic.TargetTemperature)
-                    .on("set", this.setTargetTemperature);
+                targetHeatingCoolingStateCHaracteristic.on("set", this.setTargetHeatingCoolingState);
+                targetHeatingCoolingStateCHaracteristic.props.validValues = [0, 1];
+
+                let targetTemperatureCharacteristic = this.service.getCharacteristic(Characteristic.TargetTemperature);
+                    
+                targetTemperatureCharacteristic.on("set", this.setTargetTemperature);
+                targetTemperatureCharacteristic.on("get", this.getTargetTemperature);
+                targetTemperatureCharacteristic.props.minValue = 40;
+                targetTemperatureCharacteristic.props.maxValue = 100;
+
+                let coolingThresholdTemperatureCharacter = this.service.getCharacteristic(Characteristic.CoolingThresholdTemperature);
+
+                coolingThresholdTemperatureCharacter.on("set", this.setCoolingThresholdTemperature);
+                coolingThresholdTemperatureCharacter.props.minValue = 40;
+                coolingThresholdTemperatureCharacter.props.maxValue = 100;
+
+                let heatingThresholdTemperatureCharacteristic = this.service.getCharacteristic(Characteristic.HeatingThresholdTemperature);
+
+                heatingThresholdTemperatureCharacteristic.on("set", this.setHeatingThresholdTemperature);
+                heatingThresholdTemperatureCharacteristic.props.minValue = 40;
+                heatingThresholdTemperatureCharacteristic.props.maxValue = 100;
 
                 this.service
                     .getCharacteristic(Characteristic.TemperatureDisplayUnits)
                     .on("set", this.setTemperatureDisplayUnits);
-
-                this.service
-                    .getCharacteristic(Characteristic.CoolingThresholdTemperature)
-                    .on("set", this.setCoolingThresholdTemperature);
-
-                this.service
-                    .getCharacteristic(Characteristic.HeatingThresholdTemperature)
-                    .on("set", this.setHeatingThresholdTemperature);
 
             } catch (error) {
                 this.log(`[${this.config.mac}] accessory failed to initialize. \r\n${error}`);
@@ -101,10 +109,23 @@ class Accessory {
         });
     }
 
-    setTargetHeatingCoolingStateCharacteristic = (value, next) => {
+    setTargetHeatingCoolingState = (value, next) => {
         this.debug(`[${this.config.mac}] setting state to ${value}`);
 
+        this.mqtt.publish(
+            this.buildTopic("set_keep_warm_parameters"),
+            JSON.stringify({
+                mode: value == 1 ? "boil" : "heat",
+                temperature: value ? this.maxTemperature : 40,
+            })
+        );
+
         next && next();
+    }
+
+    getTargetTemperature = (value) => {
+        this.debug(`[${this.config.mac}] getting target temperature`);
+        this.debug(value);
     }
 
     setTargetTemperature = (value, next) => {
